@@ -1,4 +1,3 @@
-//---------SHADER CODE---------///
 setFunction({
   name: 'glowCircle',
   type: 'src',
@@ -72,13 +71,13 @@ our_name_is = (str) =>
   disp = 5;
   disp2 = 150;
   disp3 = 155;
-  p1.fill(0,255,0,55);
+  p1.fill(255, 15);
   p1.text(str, p1.width/2-disp2+p1.random(-disp,disp), p1.height/2+disp3);
-  p1.fill(255,0,0,55);
+  p1.fill(255, 15);
   p1.text(str, p1.width/2-disp2+p1.random(-disp,disp), p1.height/2+disp3);
-  p1.fill(0,0,255,55);
+  p1.fill(255, 15);
   p1.text(str, p1.width/2-disp2+p1.random(-disp,disp), p1.height/2+disp3);
-  p1.fill(255);
+  p1.fill(255,10);
   p1.text(str, p1.width/2-disp2, p1.height/2+disp3-5);
 }
 tissue = () =>
@@ -164,7 +163,7 @@ spinners = (style, opacity, size, dirsign) =>
   }
   color += 0.5;
 }
-//------HYDRA FUNCTIONS--------//
+//--------HYDRA FUNCTIONS---------//
 noteLine = () =>{
   return (
     shape(4, 1, ()=> 1 + 0.2*Math.sin(10.04*time/2))
@@ -208,30 +207,72 @@ noteBar= () =>{
 }
 glitchText = () =>{
   return (
-    src(s0).modulate(voronoi(()=>cc[1]*20, ()=>cc[1]*20)).diff(noteGlitch()).modulateScale(noise(()=>cc[4],()=>cc[4]*0.1), ()=> 0.5+cc[4]*5)
+    src(s0).modulate(voronoi(()=>cc[1]*20, ()=>cc[1]*20)).diff(noteGlitch()).modulateScale(noise(()=>cc[6]/4,()=>ccActual[6]*0.1), ()=> 0.5+ccActual[6]/4)
   )
 }
 blueSun = () =>{
   glowCircle(() => flashx, () => flashy, ()=>20+ccActual[0]*20+ccActual[2]*2, 0.15, 0.1, .08).out(o1);
   return (
-    noiseCanv().invert().diff(src(o1)).blend(o0,0.9)
+    noiseCanv().invert().add(src(o1)).blend(o0,0.9)
   )
 }
 redSun = () => {
-  glowCircle(() => flashx, () => flashy, ()=>20+ccActual[0]*20+ccActual[2]*2, 0.15, 0.1, .08).out(o1);
+  glowCircle(() => flashx, () => flashy, ()=>200+ccActual[0]*20+ccActual[2]*5, 0.15, 0.1, .08).out(o1);
   return(
-    src(o1).diff(noiseCanv(),0.1).diff(o0).blend(o0, 0.9)
+    src(o1).diff(noiseCanv(),0.1).diff(o0).blend(o0, 0.9).modulate(o1, 0.005)
     )
+}
+blueSun = () =>{
+  glowCircle(() => flashx, () => flashy, ()=>200+ccActual[0]*20+ccActual[2]*5, 0.15, 0.1, .08).out(o1);
+  return (
+    noiseCanv().invert().diff(src(o1)).blend(o0,0.9).modulate(o1, 0.005)
+  )
 }
 piano1 = () =>
 {
-  src(s0).add(noteLine(),0.5).blend(o0,0.92)
+  return(
+  	src(s0).add(noteLine(),0.5).blend(o0,0.92)
+    )
 }
 piano2 = () =>
 {
-  src(s0).add(noteLineThin()).blend(o0,0.92)
+  return(
+  	src(s0).add(noteLineThin()).blend(o0,0.92)
+    )
 }
 piano3 = () =>
 {
-  src(s0).add(noteLineThin()).add(noteLine(), 0.92).blend(o0,0.95)
+  return(
+  	src(s0).add(noteLineThin()).add(noteLine(), 0.92).blend(o0,0.95)
+    )
+}
+drumRep = (x) =>
+{
+  return(
+  	src(s0).repeat(()=>1+ ccActual[6],()=> 1 + ccActual[6])
+    )
+}
+lightning = () =>
+{
+  return(
+  src(o1).mult(src(s0).add(noteLine(),0.8).add(noteLineThin(),0.8)).blend(o0,0.3).modulate(o1, 0.03)
+    )
+}
+flash = () =>
+{
+  return(
+  src(o1).diff(o0).mult(src(s0).add(noteLine(),0.8).add(noteLineThin(),0.8)).modulate(o1,0.03) //lightning with flash HEAVY // remove
+    )
+}
+flashH = () =>
+{
+  return(
+  src(o1).mult(src(s0).add(noteLine(),0.8).add(noteLineThin(),0.8)).modulate(o1,0.03).diff(o0) //lightning with flash HEAVY // remove
+    )
+}
+flashGH = () =>
+{
+  return(
+  src(o1).diff(o0).mult(src(s0).add(noteLine(),0.8).add(noteLineThin(),0.8)).modulate(o1,0.03).diff(o0) //lightning with flash HEAVY // remove
+    )
 }
